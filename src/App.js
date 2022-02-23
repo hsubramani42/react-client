@@ -8,9 +8,10 @@ import { useEffect } from "react";
 import { loadUser } from "./app/auth/actions/authActions";
 import setAuthToken from "./utils/setAuthToken";
 import { Routers } from "./routing/Routers";
+import Alert from "./app/core/components/Alert";
 function App() {
   useEffect(() => {
-    if (localStorage.getItem("token")) {
+    if (localStorage.token) {
       setAuthToken(localStorage.getItem("token"));
       store.dispatch(loadUser());
     }
@@ -21,9 +22,10 @@ function App() {
       <Provider store={store}>
         <Router>
           <Header />
+          <Alert />
           <Routers />
+          <Footer />
         </Router>
-        <Footer></Footer>
       </Provider>
     </div>
   );

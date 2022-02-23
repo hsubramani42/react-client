@@ -30,7 +30,6 @@ store.subscribe(() => {
   // old /previous state
   currentState = store.getState();
   // recent one
-
   if (previousState.auth.token !== currentState.auth.token) {
     const token = currentState.auth.token;
     setAuthToken(token);
