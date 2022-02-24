@@ -1,8 +1,47 @@
 import PropTypes from "prop-types";
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
+import { deleteEducation } from "../../profile/actions/profileActions";
 
-export const DashEdu = (props) => {
+export const DashEdu = ({
+  profile: {
+    currProfile: { education },
+  },
+  deleteEducation,
+}) => {
+  const onDelete = (e) => {
+    e.preventDefault();
+    deleteEducation(e.target.id);
+  };
+
+  const eductionList = education.map((edu) => {
+    return (
+      <tr key={edu._id}>
+        <td className="hide-sm">{edu.school}</td>
+        <td className="hide-sm">{edu.degree}</td>
+        <td className="hide-sm">
+          {edu.from.substring(0, 10)} -
+          {edu.current ? "Now" : edu.to.substring(0, 10)}
+        </td>
+        <td>
+          <button
+            className="btn btn-danger"
+            type="button"
+            id={edu._id}
+            onClick={onDelete}
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    );
+  });
+
+  if (!education || education.length === 0) {
+    return (
+      <h1 className="text-center mt-2 mb-2">No Education Details Available</h1>
+    );
+  }
   return (
     <Fragment>
       <h2 className="my-2">Education Credentials</h2>
@@ -15,25 +54,21 @@ export const DashEdu = (props) => {
             <th />
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>Northern Essex</td>
-            <td className="hide-sm">Associates</td>
-            <td className="hide-sm">02-03-2007 - 01-02-2009</td>
-            <td>
-              <button className="btn btn-danger">Delete</button>
-            </td>
-          </tr>
-        </tbody>
+        <tbody>{eductionList}</tbody>
       </table>
     </Fragment>
   );
 };
 
-DashEdu.propTypes = {};
+DashEdu.propTypes = {
+  profile: PropTypes.object.isRequired,
+  deleteEducation: PropTypes.func.isRequired,
+};
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  profile: state.profile,
+});
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { deleteEducation };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashEdu);

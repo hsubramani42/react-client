@@ -2,7 +2,6 @@ import thunk from "redux-thunk";
 import { createStore, applyMiddleware } from "redux";
 import combineReducers from "../reducers";
 import { composeWithDevTools } from "redux-devtools-extension";
-import setAuthToken from "../../utils/setAuthToken";
 
 const initialState = {};
 // default state for ur application.
@@ -31,8 +30,7 @@ store.subscribe(() => {
   currentState = store.getState();
   // recent one
   if (previousState.auth.token !== currentState.auth.token) {
-    const token = currentState.auth.token;
-    setAuthToken(token);
+    localStorage.setItem("token", currentState.auth.token);
   }
 
   // can we compare the date from two states?

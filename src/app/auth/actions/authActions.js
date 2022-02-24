@@ -9,7 +9,7 @@ import api from "../../../utils/api";
 import { setAlert } from "../../core/components/actions/alertActions";
 export const register = (formData) => async (dispatch) => {
   try {
-    const response = await api.post("/users", formData);
+    const response = await api().post("/users", formData);
     dispatch({ type: REGISTER_SUCCESS, payload: response.data });
     dispatch(setAlert("User created successfully", "success"));
   } catch (err) {
@@ -23,16 +23,14 @@ export const register = (formData) => async (dispatch) => {
 
 export const loadUser = () => async (dispatch) => {
   try {
-    const response = await api.get("/auth");
-    const token = response.data.token;
+    const response = await api().get("/auth");
     dispatch({ type: USER_LOADED, payload: response.data });
   } catch (err) {}
 };
 
 export const userLogin = (formData) => async (dispatch) => {
   try {
-    const response = await api.post("/auth", formData);
+    const response = await api().post("/auth", formData);
     dispatch({ type: LOGIN_SUCCESS, payload: response.data });
-    dispatch(loadUser());
   } catch (err) {}
 };
