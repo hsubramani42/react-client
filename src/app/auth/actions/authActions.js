@@ -12,6 +12,7 @@ export const register = (formData) => async (dispatch) => {
     const response = await api().post("/users", formData);
     dispatch({ type: REGISTER_SUCCESS, payload: response.data });
     dispatch(setAlert("User created successfully", "success"));
+    dispatch(loadUser());
   } catch (err) {
     const errors = err.response.data.errors;
     if (errors) {
@@ -32,5 +33,6 @@ export const userLogin = (formData) => async (dispatch) => {
   try {
     const response = await api().post("/auth", formData);
     dispatch({ type: LOGIN_SUCCESS, payload: response.data });
+    dispatch(loadUser());
   } catch (err) {}
 };

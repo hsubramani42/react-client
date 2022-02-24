@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import { deleteExperience } from "../../profile/actions/profileActions";
-
+import DateComponent from "../../core/components/DateComponent";
 export const DashExp = ({
   profile: {
     currProfile: { experience },
@@ -13,28 +13,30 @@ export const DashExp = ({
     e.preventDefault();
     deleteExperience(e.target.id);
   };
-  const experienceList = experience.map((exp) => {
-    return (
-      <tr key={exp._id}>
-        <td className="hide-sm">{exp.company}</td>
-        <td className="hide-sm">{exp.title}</td>
-        <td className="hide-sm">
-          {exp.from.substring(0, 10)} -
-          {exp.current ? "Now" : exp.to.substring(0, 10)}
-        </td>
-        <td>
-          <button
-            className="btn btn-danger"
-            type="button"
-            id={exp._id}
-            onClick={onDelete}
-          >
-            Delete
-          </button>
-        </td>
-      </tr>
-    );
-  });
+  const experienceList = experience.map((exp) => (
+    <tr key={exp._id}>
+      <td className="hide-sm text">{exp.company}</td>
+      <td className="hide-sm text">{exp.title}</td>
+      <td className="hide-sm text">
+        <pre>
+          <DateComponent date={exp.date} /> -{" "}
+          {exp.current
+            ? "Now"
+            : (<DateComponent date={exp.to} />).format("DD-MM-YYYY")}
+        </pre>
+      </td>
+      <td>
+        <button
+          className="btn btn-danger"
+          type="button"
+          id={exp._id}
+          onClick={onDelete}
+        >
+          Delete
+        </button>
+      </td>
+    </tr>
+  ));
   if (!experience || experience.length === 0) {
     return (
       <h1 className="text-center mt-2 mb-2">No Experience Details Available</h1>

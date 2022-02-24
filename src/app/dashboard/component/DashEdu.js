@@ -2,7 +2,8 @@ import PropTypes from "prop-types";
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import { deleteEducation } from "../../profile/actions/profileActions";
-
+import moment from "moment";
+import DateComponent from "../../core/components/DateComponent";
 export const DashEdu = ({
   profile: {
     currProfile: { education },
@@ -14,28 +15,28 @@ export const DashEdu = ({
     deleteEducation(e.target.id);
   };
 
-  const eductionList = education.map((edu) => {
-    return (
-      <tr key={edu._id}>
-        <td className="hide-sm">{edu.school}</td>
-        <td className="hide-sm">{edu.degree}</td>
-        <td className="hide-sm">
-          {edu.from.substring(0, 10)} -
-          {edu.current ? "Now" : edu.to.substring(0, 10)}
-        </td>
-        <td>
-          <button
-            className="btn btn-danger"
-            type="button"
-            id={edu._id}
-            onClick={onDelete}
-          >
-            Delete
-          </button>
-        </td>
-      </tr>
-    );
-  });
+  const eductionList = education.map((edu) => (
+    <tr key={edu._id}>
+      <td className="hide-sm text">{edu.school}</td>
+      <td className="hide-sm text">{edu.degree}</td>
+      <td className="hide-sm text">
+        <pre>
+          <DateComponent date={edu.date} /> -{" "}
+          {edu.current ? "Now" : <DateComponent date={edu.to} />}
+        </pre>
+      </td>
+      <td>
+        <button
+          className="btn btn-danger"
+          type="button"
+          id={edu._id}
+          onClick={onDelete}
+        >
+          Delete
+        </button>
+      </td>
+    </tr>
+  ));
 
   if (!education || education.length === 0) {
     return (
