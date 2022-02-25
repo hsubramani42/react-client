@@ -21,7 +21,7 @@ export const Dashboard = ({
     if (!currProfile) {
       store.dispatch(getCurrentProfile());
     }
-  });
+  }, [currProfile]);
   const profileDisplay = (
     <Fragment>
       <DashOption />
@@ -35,8 +35,7 @@ export const Dashboard = ({
             deleteAccount();
           }}
         >
-          <i className="fas fa-user-minus"></i>
-          {" "}Delete My Account
+          <i className="fas fa-user-minus"></i> Delete My Account
         </button>
       </pre>
     </Fragment>

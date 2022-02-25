@@ -1,295 +1,194 @@
 import PropTypes from "prop-types";
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useEffect } from "react";
 import { connect } from "react-redux";
-import { Link, Navigate, useMatch, useNavigate } from "react-router-dom";
-import { getCurrentProfile, createProfile } from "../actions/profileActions";
-import store from "../../../redux/store/index";
-const initialState = {
-  company: "",
-  website: "",
-  location: "",
-  status: "",
-  skills: "",
-  githubusername: "",
-  bio: "",
-  twitter: "",
-  facebook: "",
-  linkedin: "",
-  youtube: "",
-  instagram: "",
-};
+import { Link, useLocation, useParams } from "react-router-dom";
+import { v4 } from "uuid";
+import Momemt from "react-moment";
+const educationRender = (education) => (
+  <div key={v4()}>
+    <h3>{education.school}</h3>
+    <p>
+      {<Momemt format="MMM YYYY">{education.from}</Momemt>} -{" "}
+      {education.current ? (
+        "Current"
+      ) : (
+        <Momemt format="MMM YYYY">{education.to}</Momemt>
+      )}
+    </p>
+    <p>
+      <strong>Degree: </strong>
+      {education.degree}
+    </p>
+    <p>
+      <strong>Field Of Study: </strong>
+      {education.fieldofstudy}
+    </p>
+    <p>
+      <strong>Description: </strong>
+      {education.description}
+    </p>
+  </div>
+);
 
-const Profile = ({
-  profile: { currProfile, loading },
-  createProfile,
-  getCurrentProfile,
-}) => {
-  const [formData, setFormData] = useState(initialState);
+const experienceRender = (experience) => (
+  <div key={v4()}>
+    <h3 className="text-dark">{experience.company}</h3>
+    <p>
+      {<Momemt format="MMM YYYY">{experience.from}</Momemt>} -{" "}
+      {experience.current ? (
+        "Current"
+      ) : (
+        <Momemt format="MMM YYYY">{experience.to}</Momemt>
+      )}
+    </p>
+    <p>
+      <strong>Position: </strong>
+      {experience.title}
+    </p>
+    <p>
+      <strong>Description: </strong>
+      {experience.description}
+    </p>
+  </div>
+);
 
-  const creatingProfile = useMatch("/profile/create-profile");
+const gitRender = (report) => (
+  <div className="repo bg-white p-1 my-1" key={v4()}>
+    <div>
+      <h4>
+        <Link to="#" target="_blank" rel="noopener noreferrer">
+          Repo One
+        </Link>
+      </h4>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat,
+        laborum!
+      </p>
+    </div>
+    <div>
+      <ul>
+        <li className="badge badge-primary">Stars: 44</li>
+        <li className="badge badge-dark">Watchers: 21</li>
+        <li className="badge badge-light">Forks: 25</li>
+      </ul>
+    </div>
+  </div>
+);
 
-  const [displaySocialInputs, toggleSocialInputs] = useState(false);
+export const Profile = () => {
+  const { profileId } = useParams();
 
-  const navigate = useNavigate();
+  const location = useLocation();
 
-  useEffect(() => {
-    // if there is no currProfile, attempt to fetch one
-    if (!currProfile) store.dispatch(getCurrentProfile());
+  const { profile } = location.state;
 
-    // if we finished loading and we do have a currProfile
-    // then build our currProfileData
-    if (!loading && currProfile) {
-      const currProfileData = { ...initialState };
-      for (const key in currProfile) {
-        if (key in currProfileData) currProfileData[key] = currProfile[key];
-      }
-      for (const key in currProfile.social) {
-        if (key in currProfileData)
-          currProfileData[key] = currProfile.social[key];
-      }
-      // the skills may be an array from our API response
-      if (Array.isArray(currProfileData.skills))
-        currProfileData.skills = currProfileData.skills.join(", ");
-      // set local state with the currProfileData
-      setFormData(currProfileData);
-    }
-  }, [loading, getCurrentProfile, currProfile]);
+  if (!profile) {
+    return (
+      <section className="container text-center">
+        <h5 className="text text-danger mt-5 " style={{ marginTop: "200px" }}>
+          Profile Not Found
+        </h5>
+      </section>
+    );
+  }
 
-  const {
-    company,
-    website,
-    location,
-    status,
-    skills,
-    githubusername,
-    bio,
-    twitter,
-    facebook,
-    linkedin,
-    youtube,
-    instagram,
-  } = formData;
-
-  const onChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    createProfile(formData, navigate, currProfile ? true : false);
-  };
+  const { education, experience, githubusername, skills } = profile;
 
   return (
-    <Fragment>
-      <section className="container text-center">
-        <h1 className="large text-primary">
-          {creatingProfile ? "Create Your Profile" : "Edit Your Profile"}
-        </h1>
-        <p className="lead">
-          <i className="fas fa-user" />
-          <br />
-          {creatingProfile
-            ? ` Let's get some information to make your profile`
-            : " Add some changes to your profile"}
-        </p>
-        <small>* = required field</small>
-      </section>
-      <section>
-        <form className="form" onSubmit={onSubmit} align="center">
-          <div className="form-group">
-            <select name="status" value={status} onChange={onChange}>
-              <option>* Select Professional Status</option>
-              <option value="Developer">Developer</option>
-              <option value="Junior Developer">Junior Developer</option>
-              <option value="Senior Developer">Senior Developer</option>
-              <option value="Manager">Manager</option>
-              <option value="Student or Learning">Student or Learning</option>
-              <option value="Instructor">Instructor or Teacher</option>
-              <option value="Intern">Intern</option>
-              <option value="Other">Other</option>
-            </select>
-            <br />
-            <small className="form-text">
-              Give us an idea of where you are at in your career
-            </small>
-          </div>
-          <div className="form-group">
-            <input
-              type="text"
-              placeholder="Company"
-              name="company"
-              value={company}
-              onChange={onChange}
-            />
-            <br />
-            <small className="form-text">
-              Could be your own company or one you work for
-            </small>
-          </div>
-          <div className="form-group">
-            <input
-              type="text"
-              placeholder="Website"
-              name="website"
-              value={website}
-              onChange={onChange}
-            />
-            <br />
-            <small className="form-text">
-              Could be your own or a company website
-            </small>
-          </div>
-          <div className="form-group">
-            <input
-              type="text"
-              placeholder="Location"
-              name="location"
-              value={location}
-              onChange={onChange}
-            />
-            <br />
-            <small className="form-text">
-              City & state suggested (eg. Boston, MA)
-            </small>
-          </div>
-          <div className="form-group">
-            <input
-              type="text"
-              placeholder="* Skills"
-              name="skills"
-              value={skills}
-              onChange={onChange}
-            />
-            <br />
-            <small className="form-text">
-              Please use comma separated values (eg. HTML,CSS,JavaScript,PHP)
-            </small>
-          </div>
-          <div className="form-group">
-            <input
-              type="text"
-              placeholder="Github Username"
-              name="githubusername"
-              value={githubusername}
-              onChange={onChange}
-            />
-            <br />
-            <small className="form-text">
-              If you want your latest repos and a Github link, include your
-              username
-            </small>
-          </div>
-          <div className="form-group">
-            <textarea
-              placeholder="A short bio of yourself"
-              name="bio"
-              value={bio}
-              onChange={onChange}
-            />
-            <br />
-            <small className="form-text">Tell us a little about yourself</small>
-          </div>
+    <section className="container">
+      <Link to="/profile" className="btn btn-light">
+        Back To Profiles
+      </Link>
 
-          <div className="my-2">
-            <button
-              onClick={() => toggleSocialInputs(!displaySocialInputs)}
-              type="button"
-              className="btn btn-light"
-            >
-              Add Social Network Links
-            </button>
-            <span>Optional</span>
+      <div className="profile-grid my-1">
+        <div className="profile-top bg-primary p-2 ">
+          <img
+            className="round-img my-1 "
+            src={profile.user.avatar}
+            alt="profile pic"
+          />
+          <h1 className="large">{profile.name}</h1>
+          <p className="lead">
+            {profile.status} at {profile.company}
+          </p>
+          <p>{profile.location}</p>
+          <div className="icons my-1">
+            {Object.entries(profile.social).map((entry) => (
+              <Link
+                to={entry[1]}
+                replace={false}
+                target="_blank"
+                action="replace"
+                key={entry[0]}
+                rel="noopener noreferrer"
+              >
+                <i className={`fab fa-${entry[0]} fa-2x`}></i>
+              </Link>
+            ))}
           </div>
+        </div>
 
-          {displaySocialInputs && (
+        <div className="profile-about bg-light p-2">
+          <h2 className="text-primary">{profile.user.name}'s Bio</h2>
+          <p>{profile.bio}</p>
+          <div className="line"></div>
+          <h2 className="text-primary">Skill Set</h2>
+          <div className="skills">
+            {skills.map((skill) => (
+              <div className="p-1" key={skill}>
+                <i className="fa fa-check"></i> {skill}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="profile-exp bg-white p-2">
+          <h2 className="text-primary">Experience</h2>
+          {experience && experience.length > 0 ? (
+            experience.map(experienceRender)
+          ) : (
             <Fragment>
-              <div className="form-group social-input">
-                <i className="fab fa-twitter fa-2x" />
-                <br />
-                <input
-                  type="text"
-                  placeholder="Twitter URL"
-                  name="twitter"
-                  value={twitter}
-                  onChange={onChange}
-                />
-                <br />
-              </div>
-
-              <div className="form-group social-input">
-                <i className="fab fa-facebook fa-2x" />
-                <br />
-                <input
-                  type="text"
-                  placeholder="Facebook URL"
-                  name="facebook"
-                  value={facebook}
-                  onChange={onChange}
-                />
-                <br />
-              </div>
-
-              <div className="form-group social-input">
-                <i className="fab fa-youtube fa-2x" />
-                <br />
-                <input
-                  type="text"
-                  placeholder="YouTube URL"
-                  name="youtube"
-                  value={youtube}
-                  onChange={onChange}
-                />
-                <br />
-              </div>
-
-              <div className="form-group social-input">
-                <i className="fab fa-linkedin fa-2x" />
-                <br />
-                <input
-                  type="text"
-                  placeholder="Linkedin URL"
-                  name="linkedin"
-                  value={linkedin}
-                  onChange={onChange}
-                />
-                <br />
-              </div>
-
-              <div className="form-group social-input">
-                <i className="fab fa-instagram fa-2x" />
-                <br />
-                <input
-                  type="text"
-                  placeholder="Instagram URL"
-                  name="instagram"
-                  value={instagram}
-                  onChange={onChange}
-                />
-                <br />
-              </div>
+              <h4>NA</h4>
             </Fragment>
           )}
+        </div>
 
-          <input type="submit" className="btn btn-primary my-1" />
-          <br />
-          <Link className="btn btn-light my-1" to="/dashboard">
-            Go Back
-          </Link>
-        </form>
-      </section>
-    </Fragment>
+        <div className="profile-edu bg-white p-2">
+          <h2 className="text-primary">Education</h2>
+          {education && education.length > 0 ? (
+            education.map(educationRender)
+          ) : (
+            <Fragment>
+              <h4>NA</h4>
+            </Fragment>
+          )}
+        </div>
+
+        <div className="profile-github">
+          <h2 className="text-primary my-1">
+            <i className="fab fa-github"></i> Github Repos
+          </h2>
+        </div>
+        {githubusername ? (
+          <div>Github</div>
+        ) : (
+          <Fragment>
+            <h4>NA</h4>
+          </Fragment>
+        )}
+      </div>
+    </section>
   );
 };
 
 Profile.propTypes = {
-  createProfile: PropTypes.func.isRequired,
-  getCurrentProfile: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired,
+  // profile: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  profile: state.profile,
+  // profile: state.profile,
 });
 
-export default connect(mapStateToProps, { createProfile, getCurrentProfile })(
-  Profile
-);
+const mapDispatchToProps = {};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

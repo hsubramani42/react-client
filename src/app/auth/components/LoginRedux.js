@@ -6,7 +6,6 @@ import { userLogin } from "../actions/authActions";
 
 const LoginRedux = ({ isAuthenticated, userLogin }) => {
   const [formData, setFormData] = useState({});
-  const [error, setError] = useState({});
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };

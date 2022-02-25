@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import { deleteEducation } from "../../profile/actions/profileActions";
-import moment from "moment";
 import DateComponent from "../../core/components/DateComponent";
 export const DashEdu = ({
   profile: {

@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,6 +12,7 @@ export const AddExp = ({ addExperience }) => {
   };
   const onSubmit = (e) => {
     e.preventDefault();
+    // console.log(formData);
     addExperience(formData, navigate);
   };
 
@@ -78,7 +78,8 @@ export const AddExp = ({ addExperience }) => {
             cols="30"
             rows="5"
             placeholder="Job Description"
-          ></textarea>
+            onChange={onChange}
+          />
         </div>
         <input type="submit" className="btn btn-primary my-1" />
         <Link className="btn btn-light my-1" to="/dashboard">

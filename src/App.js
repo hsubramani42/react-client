@@ -8,10 +8,12 @@ import { useEffect } from "react";
 import { loadUser } from "./app/auth/actions/authActions";
 import { Routers } from "./routing/Routers";
 import Alert from "./app/core/components/Alert";
+import { getProfiles } from "./app/profile/actions/profileActions";
 function App() {
   useEffect(() => {
     if (localStorage.token) {
       store.dispatch(loadUser());
+      store.dispatch(getProfiles());
     }
   }, []);
 
