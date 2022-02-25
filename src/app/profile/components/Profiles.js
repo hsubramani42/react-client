@@ -4,26 +4,30 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { getProfiles } from "../actions/profileActions";
 
-export const Profiles = ({ profile: { profiles }, getProfiles }) => {
-  const profileContent = profiles.map((profile) => (
-    <div className="profile bg-light" key={profile._id}>
-      <img className="round-img" src={profile.user.avatar} alt="profile_pic" />
+export const ProfileItem = ({ profile }) => {
+  const {
+    _id,
+    company,
+    status,
+    location,
+    user: { name, avatar },
+    skills,
+  } = profile;
+  return (
+    <div className="profile bg-light">
+      <img className="round-img" src={avatar} alt="profile_pic" />
       <div>
-        <h2>{profile.user.name}</h2>
+        <h2>{name}</h2>
         <p>
-          {profile.status} at {profile.company}
+          {status} at {company}
         </p>
-        <p>{profile.location}</p>
-        <Link
-          to={profile._id}
-          state={{ profile: profile }}
-          className="btn btn-primary"
-        >
+        <p>{location}</p>
+        <Link to={_id} state={{ profile: profile }} className="btn btn-primary">
           View Profile
         </Link>
       </div>
       <ul>
-        {profile.skills.map((skill) => (
+        {skills.slice(0, 4).map((skill) => (
           <li className="text-primary" key={skill}>
             <i className="fas fa-check"></i>
             {skill}
@@ -31,7 +35,10 @@ export const Profiles = ({ profile: { profiles }, getProfiles }) => {
         ))}
       </ul>
     </div>
-  ));
+  );
+};
+
+export const Profiles = ({ profile: { profiles }, getProfiles }) => {
   return (
     <section className="container">
       <h1 className="large text-primary">Developers</h1>
@@ -39,7 +46,13 @@ export const Profiles = ({ profile: { profiles }, getProfiles }) => {
         <i className="fab fa-connectdevelop"></i> Browse and connect with
         developers
       </p>
-      <div className="profiles">{profileContent}</div>
+      <div className="profiles">
+        {profiles &&
+          profiles.length > 0 &&
+          profiles.map((profile) => (
+            <ProfileItem profile={profile} key={profile._id} />
+          ))}
+      </div>
     </section>
   );
 };

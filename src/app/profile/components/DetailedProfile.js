@@ -75,7 +75,7 @@ const gitRender = (report) => (
   </div>
 );
 
-export const Profile = () => {
+export const DetailedProfile = () => {
   const { profileId } = useParams();
 
   const location = useLocation();
@@ -181,7 +181,7 @@ export const Profile = () => {
   );
 };
 
-Profile.propTypes = {
+DetailedProfile.propTypes = {
   // profile: PropTypes.object.isRequired,
 };
 
@@ -191,4 +191,4 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default connect(mapStateToProps, mapDispatchToProps)(DetailedProfile);

@@ -4,7 +4,7 @@ import AddEdu from "../components/AddEdu";
 import AddExp from "../components/AddExp";
 import ProfileForm from "../components/ProfileForm";
 import Profiles from "../components/Profiles";
-import Profile from "../components/Profile";
+import DetailedProfile from "../components/DetailedProfile";
 const ProfileRouting = () => {
   return (
     <Routes>
@@ -13,7 +13,7 @@ const ProfileRouting = () => {
       <Route path="/add-experience" element={<AddExp />} />
       <Route path="/add-education" element={<AddEdu />} />
       <Route path="/" element={<Profiles />} />
-      <Route path="/:profileId" element={<Profile />} />
+      <Route path="/:profileId" element={<DetailedProfile />} />
     </Routes>
   );
 };
