@@ -3,6 +3,7 @@ import {
   USER_LOADED,
   LOGIN_SUCCESS,
   REGISTER_FAIL,
+  LOGOUT,
 } from "../../../redux/types/userTypes";
 
 import api from "../../../utils/api";
@@ -35,4 +36,12 @@ export const userLogin = (formData) => async (dispatch) => {
     dispatch({ type: LOGIN_SUCCESS, payload: response.data });
     dispatch(loadUser());
   } catch (err) {}
+};
+
+export const logout = () => (dispatch) => {
+  localStorage.removeItem("token");
+  dispatch({
+    type: LOGOUT,
+    payload: {},
+  });
 };

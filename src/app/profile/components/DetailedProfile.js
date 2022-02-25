@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React, { Fragment, useEffect } from "react";
 import { connect } from "react-redux";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { v4 } from "uuid";
 import Momemt from "react-moment";
 import { getProfileById } from "../actions/profileActions";
@@ -210,7 +210,7 @@ export const DetailedProfile = ({
       <Link to="/profile" className="btn btn-light">
         Back To Profiles
       </Link>
-      {user._id === currProfile.user._id && (
+      {currProfile && user && user._id === currProfile.user._id && (
         <Link to="/dashboard" className="btn btn-light">
           Edit
         </Link>

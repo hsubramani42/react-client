@@ -3,6 +3,7 @@ import {
   REGISTER_FAIL,
   REGISTER_SUCCESS,
   USER_LOADED,
+  LOGOUT,
 } from "../../../redux/types/userTypes";
 
 const initialState = {
@@ -27,6 +28,14 @@ export default (state = initialState, action) => {
       };
     case REGISTER_FAIL:
       return { ...state, token: null, isAuthenticated: false, loading: false };
+    case LOGOUT:
+      return {
+        ...state,
+        user: null,
+        isAuthenticated: false,
+        loading: false,
+        token: localStorage.getItem("token"),
+      };
     default:
       return state;
   }
