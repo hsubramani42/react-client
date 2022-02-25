@@ -11,6 +11,7 @@ export const ProfileItem = ({ profile }) => {
     status,
     location,
     user: { name, avatar },
+    user,
     skills,
   } = profile;
   return (
@@ -22,7 +23,7 @@ export const ProfileItem = ({ profile }) => {
           {status} at {company}
         </p>
         <p>{location}</p>
-        <Link to={_id} state={{ profile: profile }} className="btn btn-primary">
+        <Link to={user._id} className="btn btn-primary">
           View Profile
         </Link>
       </div>
@@ -39,6 +40,9 @@ export const ProfileItem = ({ profile }) => {
 };
 
 export const Profiles = ({ profile: { profiles }, getProfiles }) => {
+  useEffect(() => {
+    if (!profiles || profiles.length === 0) getProfiles();
+  }, [profiles]);
   return (
     <section className="container">
       <h1 className="large text-primary">Developers</h1>
